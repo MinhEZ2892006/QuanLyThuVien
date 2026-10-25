@@ -1,0 +1,105 @@
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> SignInManager
+@inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - QuanLyThuVIen</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/QuanLyThuVIen.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="starfield" aria-hidden="true">
+        <span style="left:6%;  top:0;  animation-duration: 14s; animation-delay: 0s;"></span>
+        <span style="left:18%; top:0;  animation-duration: 19s; animation-delay: 2s;"></span>
+        <span style="left:32%; top:0;  animation-duration: 16s; animation-delay: 5s;"></span>
+        <span style="left:47%; top:0;  animation-duration: 22s; animation-delay: 1s;"></span>
+        <span style="left:61%; top:0;  animation-duration: 15s; animation-delay: 4s;"></span>
+        <span style="left:74%; top:0;  animation-duration: 20s; animation-delay: 7s;"></span>
+        <span style="left:85%; top:0;  animation-duration: 17s; animation-delay: 3s;"></span>
+        <span style="left:93%; top:0;  animation-duration: 24s; animation-delay: 6s;"></span>
+        <span style="left:40%; top:0;  animation-duration: 13s; animation-delay: 8s;"></span>
+        <span style="left:68%; top:0;  animation-duration: 18s; animation-delay: 9s;"></span>
+    </div>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-cpu"></i> QuanLy<span style="color:var(--neon-purple)">ThuVien</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-grid-1x2-fill"></i> Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Book" asp-action="Index"><i class="bi bi-book-half"></i> Sách</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="LibraryCard" asp-action="Index"><i class="bi bi-person-vcard-fill"></i> Thẻ thư viện</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Loan" asp-action="Index"><i class="bi bi-arrow-left-right"></i> Mượn sách</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Report" asp-action="Index"><i class="bi bi-bar-chart-line-fill"></i> Báo cáo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy"><i class="bi bi-shield-lock-fill"></i> Privacy</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Profile">
+                                    <i class="bi bi-person-circle"></i> @UserManager.GetUserName(User)
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="nav-link nav-link-btn">
+                                        <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login"><i class="bi bi-box-arrow-in-right"></i> Đăng nhập</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register"><i class="bi bi-person-plus-fill"></i> Đăng ký</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            <i class="bi bi-stars"></i> &copy; 2026 - QuanLyThuVIen - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

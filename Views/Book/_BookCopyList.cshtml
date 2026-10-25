@@ -1,0 +1,41 @@
+@model IEnumerable<QuanLyThuVIen.Models.BookCopy>
+
+<table class="table table-sm table-bordered align-middle">
+    <thead>
+        <tr>
+            <th><i class="bi bi-hash"></i> Số kiểm soát</th>
+            <th><i class="bi bi-activity"></i> Tình trạng</th>
+            <th><i class="bi bi-chat-left-text-fill"></i> Ghi chú</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var copy in Model)
+        {
+            <tr>
+                <td>@copy.ControlNumber</td>
+                <td>
+                    @switch (copy.Status)
+                    {
+                        case QuanLyThuVIen.Models.BookCopyStatus.Available:
+                            <span class="badge bg-success"><i class="bi bi-check-circle-fill"></i> Còn</span>
+                            break;
+                        case QuanLyThuVIen.Models.BookCopyStatus.Borrowed:
+                            <span class="badge bg-primary"><i class="bi bi-arrow-left-right"></i> Cho mượn</span>
+                            break;
+                        case QuanLyThuVIen.Models.BookCopyStatus.Lost:
+                            <span class="badge bg-dark"><i class="bi bi-x-octagon-fill"></i> Mất</span>
+                            break;
+                        case QuanLyThuVIen.Models.BookCopyStatus.Damaged:
+                            <span class="badge bg-danger"><i class="bi bi-exclamation-triangle-fill"></i> Hỏng</span>
+                            break;
+                    }
+                </td>
+                <td>@copy.Note</td>
+                <td>
+                    <a asp-controller="BookCopy" asp-action="ChangeStatus" asp-route-id="@copy.BookCopyId" class="btn btn-sm btn-outline-warning"><i class="bi bi-arrow-repeat"></i> Đổi tình trạng</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

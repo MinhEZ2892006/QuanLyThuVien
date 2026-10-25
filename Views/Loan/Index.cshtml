@@ -1,0 +1,89 @@
+@model List<QuanLyThuVIen.Models.Loan>
+@using QuanLyThuVIen.Models
+
+@{
+    ViewData["Title"] = "Tra cứu phiếu mượn";
+}
+
+<h1><i class="bi bi-arrow-left-right"></i> Tra cứu phiếu mượn</h1>
+
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-end mb-3">
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i> Mượn sách mới</a>
+
+    <form asp-action="Index" method="get" class="d-flex gap-2">
+        <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control"
+               placeholder="Tìm theo số thẻ, họ tên, mã phiếu mượn, mã/tên sách..." style="min-width: 340px;" />
+         <button type="submit" class="btn btn-outline-primary text-nowrap flex-shrink-0"><i class="bi bi-search"></i> Tìm kiếm</button>
+    <a asp-action="Index" class="btn btn-outline-secondary text-nowrap flex-shrink-0"><i class="bi bi-x-circle"></i> Xóa lọc</a>
+    </form>
+</div>
+
+@if (!Model.Any())
+{
+    <p class="text-muted"><i class="bi bi-inboxes"></i> Không tìm thấy phiếu mượn nào phù hợp.</p>
+}
+else
+{
+    @foreach (var loan in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+                <span>
+                    <i class="bi bi-receipt"></i> Phiếu mượn #@loan.LoanId -
+                    <i class="bi bi-person-vcard-fill"></i> @loan.CardNumber - @loan.LibraryCard?.StudentName -
+                    Ngày mượn: @loan.LoanDate.ToString("dd/MM/yyyy") -
+                    Hạn trả: @loan.DueDate.ToString("dd/MM/yyyy")
+                </span>
+                <a asp-action="ActiveLoans" asp-route-cardNumber="@loan.CardNumber" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-journal-check"></i> Xem phiếu đang hoạt động của thẻ này
+                </a>
+            </div>
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th><i class="bi bi-upc"></i> Mã sách</th>
+                        <th><i class="bi bi-bookmark-fill"></i> Tên sách</th>
+                        <th><i class="bi bi-hash"></i> Số kiểm soát</th>
+                        <th><i class="bi bi-activity"></i> Tình trạng dòng mượn</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var detail in loan.LoanDetails)
+                    {
+                        <tr>
+                            <td>@detail.BookCopy?.BookCode</td>
+                            <td>@detail.BookCopy?.Book?.Title</td>
+                            <td>@detail.BookCopy?.ControlNumber</td>
+                            <td>
+                                @if (detail.Status == LoanDetailStatus.Borrowed)
+                                {
+                                    <span class="badge bg-primary"><i class="bi bi-arrow-left-right"></i> Đang mượn</span>
+                                }
+                                else if (detail.Status == LoanDetailStatus.Returned)
+                                {
+                                    <span class="badge bg-success"><i class="bi bi-check-circle-fill"></i> Đã trả</span>
+                                }
+                                else if (detail.Status == LoanDetailStatus.Lost)
+                                {
+                                    <span class="badge bg-danger"><i class="bi bi-x-octagon-fill"></i> Mất</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle-fill"></i> Hỏng</span>
+                                }
+                            </td>
+                            <td>
+                                @if (detail.Status == LoanDetailStatus.Borrowed)
+                                {
+                                    <a asp-action="Return" asp-route-id="@detail.LoanDetailId" class="btn btn-sm btn-outline-primary"><i class="bi bi-box-arrow-in-left"></i> Trả sách</a>
+                                    <a asp-action="ReportLostOrDamaged" asp-route-id="@detail.LoanDetailId" class="btn btn-sm btn-outline-danger"><i class="bi bi-exclamation-triangle-fill"></i> Báo mất/hỏng</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}

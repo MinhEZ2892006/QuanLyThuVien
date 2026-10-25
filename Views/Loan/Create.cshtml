@@ -1,0 +1,59 @@
+@model QuanLyThuVIen.Models.ViewModels.LoanCreateViewModel
+
+@{
+    ViewData["Title"] = "Mượn sách";
+}
+
+<h1><i class="bi bi-arrow-left-right"></i> Mượn sách</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CardNumber" class="control-label"><i class="bi bi-person-vcard-fill"></i> Thẻ thư viện</label>
+                <select asp-for="CardNumber" class="form-select" asp-items="(IEnumerable<SelectListItem>)ViewBag.Cards">
+                    <option value="">-- Chọn thẻ thư viện --</option>
+                </select>
+                <span asp-validation-for="CardNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="LoanDate" class="control-label"><i class="bi bi-calendar-event-fill"></i> Ngày mượn</label>
+                <input asp-for="LoanDate" class="form-control" />
+                <span asp-validation-for="LoanDate" class="text-danger"></span>
+            </div>
+
+            <p class="text-muted mb-1"><i class="bi bi-info-circle-fill"></i> Chọn tối đa 3 mã sách muốn mượn (để trống ô nào nếu không mượn đủ 3):</p>
+
+            <div class="form-group mb-3">
+                <label asp-for="BookCode1" class="control-label"><i class="bi bi-book-half"></i> Mã sách 1</label>
+                <select asp-for="BookCode1" class="form-select" asp-items="(IEnumerable<SelectListItem>)ViewBag.Books">
+                    <option value="">-- Không chọn --</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="BookCode2" class="control-label"><i class="bi bi-book-half"></i> Mã sách 2</label>
+                <select asp-for="BookCode2" class="form-select" asp-items="(IEnumerable<SelectListItem>)ViewBag.Books">
+                    <option value="">-- Không chọn --</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="BookCode3" class="control-label"><i class="bi bi-book-half"></i> Mã sách 3</label>
+                <select asp-for="BookCode3" class="form-select" asp-items="(IEnumerable<SelectListItem>)ViewBag.Books">
+                    <option value="">-- Không chọn --</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle-fill"></i> Mượn sách</button>
+            <a asp-controller="LibraryCard" asp-action="Index" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Hủy</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

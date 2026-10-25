@@ -1,0 +1,75 @@
+@model QuanLyThuVIen.Models.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Đăng ký";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    var externalSchemes = (IList<Microsoft.AspNetCore.Authentication.AuthenticationScheme>)ViewBag.ExternalSchemes ?? new List<Microsoft.AspNetCore.Authentication.AuthenticationScheme>();
+}
+
+<h1><i class="bi bi-person-plus-fill"></i> Đăng ký tài khoản</h1>
+
+<div class="auth-card">
+    <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+    <form asp-action="Register" asp-route-returnUrl="@returnUrl" method="post">
+        <div class="form-group mb-3">
+            <label asp-for="FullName" class="control-label"><i class="bi bi-person-fill"></i> Họ tên</label>
+            <input asp-for="FullName" class="form-control" maxlength="100" placeholder="Tối đa 100 ký tự" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Email" class="control-label"><i class="bi bi-envelope-fill"></i> Email</label>
+            <input asp-for="Email" class="form-control" autocomplete="username" placeholder="ten@example.com" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Password" class="control-label"><i class="bi bi-key-fill"></i> Mật khẩu</label>
+            <input asp-for="Password" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+            <div class="form-text text-muted"><i class="bi bi-info-circle"></i> Tối thiểu 6 ký tự, phải có cả chữ và số.</div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="ConfirmPassword" class="control-label"><i class="bi bi-key-fill"></i> Nhập lại mật khẩu</label>
+            <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100"><i class="bi bi-check-circle-fill"></i> Đăng ký</button>
+    </form>
+
+    @if (externalSchemes.Any())
+    {
+        <div class="auth-divider">hoặc</div>
+        <div class="d-grid gap-2">
+            @foreach (var scheme in externalSchemes)
+            {
+                <form asp-action="ExternalLogin" method="post">
+                    <input type="hidden" name="provider" value="@scheme.Name" />
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                    @if (scheme.Name == "Google")
+                    {
+                        <button type="submit" class="btn btn-google"><i class="bi bi-google"></i> Đăng ký với Google</button>
+                    }
+                    else if (scheme.Name == "Facebook")
+                    {
+                        <button type="submit" class="btn btn-facebook"><i class="bi bi-facebook"></i> Đăng ký với Facebook</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-outline-secondary w-100">Đăng ký với @scheme.DisplayName</button>
+                    }
+                </form>
+            }
+        </div>
+    }
+
+    <p class="text-muted mt-3 mb-0">
+        Đã có tài khoản? <a asp-action="Login" asp-route-returnUrl="@returnUrl">Đăng nhập</a>
+    </p>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

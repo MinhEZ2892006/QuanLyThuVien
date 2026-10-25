@@ -1,0 +1,23 @@
+/* Component-scoped tweaks layered on top of the sci-fi theme in site.css */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+.border-top {
+  border-top: 1px solid var(--border-glow, rgba(63,169,255,.35));
+}
+.border-bottom {
+  border-bottom: 1px solid var(--border-glow, rgba(63,169,255,.35));
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .95rem rgba(63, 169, 255, .18);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}

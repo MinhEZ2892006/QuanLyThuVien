@@ -1,0 +1,40 @@
+@model QuanLyThuVIen.Models.LibraryCard
+
+@{
+    ViewData["Title"] = "Cấp thẻ thư viện mới";
+}
+
+<h1><i class="bi bi-person-vcard-fill"></i> Cấp thẻ thư viện mới</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="CardNumber" class="control-label"><i class="bi bi-credit-card-2-front-fill"></i> Số thẻ</label>
+                <input asp-for="CardNumber" class="form-control" />
+                <span asp-validation-for="CardNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="StudentName" class="control-label"><i class="bi bi-person-fill"></i> Họ tên sinh viên</label>
+                <input asp-for="StudentName" class="form-control" />
+                <span asp-validation-for="StudentName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ExpiryDate" class="control-label"><i class="bi bi-calendar-x-fill"></i> Ngày hết hạn</label>
+                <input asp-for="ExpiryDate" class="form-control" />
+                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save-fill"></i> Cấp thẻ</button>
+            <a asp-action="Index" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Hủy</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,60 @@
+@model QuanLyThuVIen.Models.LoanDetail
+
+@{
+    ViewData["Title"] = "Báo mất / Báo hỏng sách";
+}
+
+<h1><i class="bi bi-exclamation-triangle-fill"></i> Báo mất / Báo hỏng sách</h1>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3"><i class="bi bi-receipt"></i> Phiếu mượn</dt>
+        <dd class="col-sm-9">#@Model.LoanId</dd>
+
+        <dt class="col-sm-3"><i class="bi bi-person-vcard-fill"></i> Số thẻ</dt>
+        <dd class="col-sm-9">@Model.Loan?.CardNumber</dd>
+
+        <dt class="col-sm-3"><i class="bi bi-upc"></i> Mã sách</dt>
+        <dd class="col-sm-9">@Model.BookCopy?.BookCode - @Model.BookCopy?.Book?.Title</dd>
+
+        <dt class="col-sm-3"><i class="bi bi-hash"></i> Số kiểm soát</dt>
+        <dd class="col-sm-9">@Model.BookCopy?.ControlNumber</dd>
+
+        <dt class="col-sm-3"><i class="bi bi-calendar-event-fill"></i> Ngày mượn</dt>
+        <dd class="col-sm-9">@Model.Loan?.LoanDate.ToString("dd/MM/yyyy")</dd>
+
+        <dt class="col-sm-3"><i class="bi bi-calendar-x-fill"></i> Hạn trả</dt>
+        <dd class="col-sm-9">@Model.Loan?.DueDate.ToString("dd/MM/yyyy")</dd>
+    </dl>
+</div>
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+@if (Model.Status == QuanLyThuVIen.Models.LoanDetailStatus.Borrowed)
+{
+    <form asp-action="ReportLostOrDamaged" asp-route-id="@Model.LoanDetailId" method="post">
+        <div class="form-group mb-3">
+            <label class="control-label"><i class="bi bi-list-check"></i> Lý do</label>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="reason" id="reasonLost"
+                       value="@QuanLyThuVIen.Models.CompensationReason.Lost" checked>
+                <label class="form-check-label" for="reasonLost"><i class="bi bi-x-octagon-fill"></i> Mất sách</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="reason" id="reasonDamaged"
+                       value="@QuanLyThuVIen.Models.CompensationReason.Damaged">
+                <label class="form-check-label" for="reasonDamaged"><i class="bi bi-exclamation-triangle-fill"></i> Hỏng sách</label>
+            </div>
+        </div>
+
+        <p class="text-danger"><i class="bi bi-shield-exclamation"></i> Lưu ý: sau khi xác nhận, thẻ thư viện liên quan sẽ bị <strong>KHÓA</strong> cho tới khi bồi thường xong (Giai đoạn 6).</p>
+
+        <button type="submit" class="btn btn-danger"><i class="bi bi-check-circle-fill"></i> Xác nhận báo mất/hỏng</button>
+        <a asp-action="ActiveLoans" asp-route-cardNumber="@Model.Loan?.CardNumber" class="btn btn-secondary"><i class="bi bi-x-circle"></i> Hủy</a>
+    </form>
+}
+else
+{
+    <p class="text-warning"><i class="bi bi-exclamation-triangle-fill"></i> Dòng mượn này không ở trạng thái đang mượn, không thể báo mất/hỏng.</p>
+    <a asp-action="ActiveLoans" asp-route-cardNumber="@Model.Loan?.CardNumber" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> Quay lại</a>
+}

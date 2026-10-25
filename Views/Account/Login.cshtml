@@ -1,0 +1,69 @@
+@model QuanLyThuVIen.Models.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+    var externalSchemes = (IList<Microsoft.AspNetCore.Authentication.AuthenticationScheme>)ViewBag.ExternalSchemes ?? new List<Microsoft.AspNetCore.Authentication.AuthenticationScheme>();
+}
+
+<h1><i class="bi bi-box-arrow-in-right"></i> Đăng nhập</h1>
+
+<div class="auth-card">
+    <div asp-validation-summary="All" class="text-danger mb-2"></div>
+
+    <form asp-action="Login" method="post">
+        <input type="hidden" asp-for="ReturnUrl" />
+
+        <div class="form-group mb-3">
+            <label asp-for="Email" class="control-label"><i class="bi bi-envelope-fill"></i> Email</label>
+            <input asp-for="Email" class="form-control" autocomplete="username" placeholder="ten@example.com" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Password" class="control-label"><i class="bi bi-key-fill"></i> Mật khẩu</label>
+            <input asp-for="Password" class="form-control" autocomplete="current-password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-3">
+            <input asp-for="RememberMe" class="form-check-input" />
+            <label asp-for="RememberMe" class="form-check-label">Ghi nhớ đăng nhập</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100"><i class="bi bi-box-arrow-in-right"></i> Đăng nhập</button>
+    </form>
+
+    @if (externalSchemes.Any())
+    {
+        <div class="auth-divider">hoặc</div>
+        <div class="d-grid gap-2">
+            @foreach (var scheme in externalSchemes)
+            {
+                <form asp-action="ExternalLogin" method="post">
+                    <input type="hidden" name="provider" value="@scheme.Name" />
+                    <input type="hidden" name="returnUrl" value="@returnUrl" />
+                    @if (scheme.Name == "Google")
+                    {
+                        <button type="submit" class="btn btn-google"><i class="bi bi-google"></i> Đăng nhập với Google</button>
+                    }
+                    else if (scheme.Name == "Facebook")
+                    {
+                        <button type="submit" class="btn btn-facebook"><i class="bi bi-facebook"></i> Đăng nhập với Facebook</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-outline-secondary w-100">Đăng nhập với @scheme.DisplayName</button>
+                    }
+                </form>
+            }
+        </div>
+    }
+
+    <p class="text-muted mt-3 mb-0">
+        Chưa có tài khoản? <a asp-action="Register" asp-route-returnUrl="@returnUrl">Đăng ký ngay</a>
+    </p>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
